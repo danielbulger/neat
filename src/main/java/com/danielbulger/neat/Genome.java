@@ -56,9 +56,9 @@ public class Genome implements Cloneable {
 				continue;
 			}
 
-			final Node from = nodes.get(connection.getFrom());
+			final Node from = nodes.get(connection.getFrom().getId());
 
-			final Node to = nodes.get(connection.getTo());
+			final Node to = nodes.get(connection.getTo().getId());
 
 			if (from == null || to == null) {
 				throw new IllegalStateException();

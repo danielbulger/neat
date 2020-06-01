@@ -18,7 +18,7 @@ public class Node implements Comparable<Node> {
 
 	private final NodeType type;
 
-	private float value;
+	private float value = 0;
 
 	public Node(int id, @NotNull NodeType type) {
 		this.id = id;
@@ -27,6 +27,7 @@ public class Node implements Comparable<Node> {
 
 	public Node(@NotNull Node other) {
 		this(other.id, other.type);
+		this.value = other.getValue();
 	}
 
 	@Contract(pure = true)
