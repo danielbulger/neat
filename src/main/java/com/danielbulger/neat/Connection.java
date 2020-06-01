@@ -9,13 +9,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Connection {
 
 	@NotNull
-	public static Connection create(int from, int to) {
+	public static Connection create(Node from, Node to) {
 		return new Connection(from, to, ThreadLocalRandom.current().nextFloat(), Innovation.next());
 	}
 
-	private final int from;
+	private final Node from;
 
-	private final int to;
+	private final Node to;
 
 	private float weight;
 
@@ -23,11 +23,11 @@ public class Connection {
 
 	private boolean enabled;
 
-	public Connection(int from, int to, float weight, Innovation innovation) {
+	public Connection(Node from, Node to, float weight, Innovation innovation) {
 		this(from, to, weight, innovation, true);
 	}
 
-	public Connection(int from, int to, float weight, Innovation innovation, boolean enabled) {
+	public Connection(Node from, Node to, float weight, Innovation innovation, boolean enabled) {
 		this.from = from;
 		this.to = to;
 		this.weight = weight;
@@ -40,12 +40,12 @@ public class Connection {
 	}
 
 	@Contract(pure = true)
-	public int getFrom() {
+	public Node getFrom() {
 		return from;
 	}
 
 	@Contract(pure = true)
-	public int getTo() {
+	public Node getTo() {
 		return to;
 	}
 

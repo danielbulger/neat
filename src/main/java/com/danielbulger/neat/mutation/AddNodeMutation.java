@@ -34,10 +34,10 @@ public class AddNodeMutation implements Mutation {
 		genome.addConnections(
 
 			// The connection from the existing from node to the new node.
-			Connection.create(oldConnection.getFrom(), node.getId()),
+			Connection.create(oldConnection.getFrom(), node),
 
 			// The connection from the new node to the existing to node.
-			Connection.create(node.getId(), oldConnection.getTo())
+			Connection.create(node, oldConnection.getTo())
 		);
 	}
 }

@@ -6,15 +6,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Genome {
+public class Genome implements Cloneable {
 
 	private final NavigableMap<Integer, Node> nodes = new TreeMap<>();
 
 	private final EnumMap<NodeType, List<Node>> nodeTypes = new EnumMap<>(NodeType.class);
 
-	private final List<Connection> connections = new ArrayList<>();
+	private final NavigableMap<Innovation, Connection> connections = new TreeMap<>();
 
-	private final NavigableSet<Innovation> innovations = new TreeSet<>();
+	public Genome() {
+	}
+
+	public Genome(Genome parent) {
+
+	}
 
 	public Genome(int numInputs, int numOutputs) {
 		if (numInputs <= 0) {
@@ -45,7 +50,7 @@ public class Genome {
 			inputNodes.get(i).setValue(values[i]);
 		}
 
-		for (final Connection connection : connections) {
+		for (final Connection connection : connections.values()) {
 
 			if (!connection.isEnabled()) {
 				continue;
@@ -79,13 +84,11 @@ public class Genome {
 
 
 		for (int i = 0; i < numInputs; ++i) {
-			Node node = Node.create(NodeType.INPUT);
-			addNode(node);
+			addNode(Node.create(NodeType.INPUT));
 		}
 
 		for (int i = 0; i < numOutputs; ++i) {
-			Node node = Node.create(NodeType.OUTPUT);
-			addNode(node);
+			addNode(Node.create(NodeType.OUTPUT));
 		}
 
 		for (final Node input : nodeTypes.get(NodeType.INPUT)) {
@@ -94,20 +97,20 @@ public class Genome {
 
 				this.addConnection(Connection.create(
 
-					input.getId(),
+					input,
 
-					output.getId()
+					output
 				));
 			}
 		}
 	}
 
 	@Contract(pure = true)
-	public boolean isConnected(int from, int to) {
+	public boolean isConnected(Node from, Node to) {
 
-		for (final Connection connection : connections) {
+		for (final Connection connection : connections.values()) {
 
-			if (connection.getTo() == to && connection.getFrom() == from) {
+			if (connection.getTo().equals(to) && connection.getFrom().equals(from)) {
 				return true;
 			}
 		}
@@ -133,27 +136,39 @@ public class Genome {
 
 	@Contract(mutates = "this")
 	public void addConnection(final @NotNull Connection connection) {
-		connections.add(connection);
 
-		innovations.add(connection.getInnovation());
+		connections.put(connection.getInnovation(), connection);
+
+		if (!nodes.containsKey(connection.getFrom().getId())) {
+			addNode(connection.getFrom());
+		}
+
+		if (!nodes.containsKey(connection.getTo().getId())) {
+			addNode(connection.getTo());
+		}
 	}
 
 	@Contract(mutates = "this")
 	public void addConnections(final @NotNull Connection... elements) {
-		connections.addAll(Arrays.asList(elements));
+
+		for (final Connection connection : elements) {
+			this.addConnection(connection);
+		}
+
 	}
 
 	@NotNull
 	@Contract(pure = true)
 	public List<Connection> getActiveConnections() {
-		return connections.stream()
+		return connections.values()
+			.stream()
 			.filter(Connection::isEnabled)
 			.collect(Collectors.toList());
 	}
 
 	@NotNull
 	@Contract(pure = true)
-	public List<Connection> getConnections() {
+	public NavigableMap<Innovation, Connection> getConnections() {
 		return connections;
 	}
 
@@ -161,11 +176,5 @@ public class Genome {
 	@Contract(pure = true)
 	public NavigableMap<Integer, Node> getNodes() {
 		return nodes;
-	}
-
-	@NotNull
-	@Contract(pure = true)
-	public NavigableSet<Innovation> getInnovations() {
-		return innovations;
 	}
 }

@@ -25,6 +25,10 @@ public class Node implements Comparable<Node> {
 		this.type = Objects.requireNonNull(type);
 	}
 
+	public Node(@NotNull Node other) {
+		this(other.id, other.type);
+	}
+
 	@Contract(pure = true)
 	public float getValue() {
 		return value;

@@ -44,6 +44,16 @@ public class Species {
 		}
 	}
 
+	@Contract(pure = true)
+	public float getTotalFitness() {
+		return phenotypes.stream()
+			.reduce(
+				0.0f,
+				(partial, phenotype) -> phenotype.getFitness() + partial,
+				Float::sum
+			);
+	}
+
 	@NotNull
 	@Contract(pure = true)
 	public Phenotype getCurrentBest() {

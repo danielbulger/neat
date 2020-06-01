@@ -56,15 +56,15 @@ public class CompatibilitySpeciesEvaluate implements SpeciesEvaluate {
 	@Contract(pure = true)
 	private int getExcess(@NotNull Genome representative, @NotNull Genome genome) {
 
-		Innovation last = representative.getInnovations().last();
+		Innovation last = representative.getConnections().lastKey();
 
 		int size = 0;
 
-		final NavigableSet<Innovation> innovations = genome.getInnovations();
+		final NavigableMap<Innovation, Connection> innovations = genome.getConnections();
 
 		// Keep moving up the set until we run out of innovations
 		// that are higher than the representative innovations.
-		while ((last = innovations.higher(last)) != null) {
+		while ((last = innovations.higherKey(last)) != null) {
 			++size;
 		}
 
@@ -74,24 +74,24 @@ public class CompatibilitySpeciesEvaluate implements SpeciesEvaluate {
 	@Contract(pure = true)
 	private int getDisjoint(@NotNull Genome representative, @NotNull Genome genome) {
 
-		final NavigableSet<Innovation> repSet = representative.getInnovations();
+		final NavigableMap<Innovation, Connection> repSet = representative.getConnections();
 
-		final NavigableSet<Innovation> genomeSet = genome.getInnovations();
+		final NavigableMap<Innovation, Connection> genomeSet = genome.getConnections();
 
 		int size = 0;
 
-		for (final Innovation innovation : repSet) {
+		for (final Innovation innovation : repSet.keySet()) {
 
-			if (!genomeSet.contains(innovation)) {
+			if (!genomeSet.containsKey(innovation)) {
 				++size;
 			}
 		}
 
-		final Innovation last = repSet.last();
+		final Innovation last = repSet.lastKey();
 
-		for (final Innovation innovation : genomeSet) {
+		for (final Innovation innovation : genomeSet.keySet()) {
 
-			if (!repSet.contains(innovation)) {
+			if (!repSet.containsKey(innovation)) {
 
 				// If the innovation is higher than the largest in the other set
 				// the it is classified as an excess not an disjoint.
@@ -111,9 +111,9 @@ public class CompatibilitySpeciesEvaluate implements SpeciesEvaluate {
 
 		float sum = 0;
 
-		for (final Connection c1 : representative.getConnections()) {
+		for (final Connection c1 : representative.getConnections().values()) {
 
-			for (final Connection c2 : genome.getConnections()) {
+			for (final Connection c2 : genome.getConnections().values()) {
 
 				if (c1.equals(c2)) {
 

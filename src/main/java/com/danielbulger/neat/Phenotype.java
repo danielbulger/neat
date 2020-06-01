@@ -8,6 +8,13 @@ public class Phenotype implements Comparable<Phenotype> {
 
 	private float fitness;
 
+	public Phenotype() {
+	}
+
+	public Phenotype(@NotNull Genome genome) {
+		this.genome = genome;
+	}
+
 	public Genome getGenome() {
 		return genome;
 	}

@@ -28,7 +28,7 @@ public class AddConnectionMutation implements Mutation {
 
 		Node toNode = optionalSecondNode.get();
 
-		if(fromNode.equals(toNode)) {
+		if (fromNode.equals(toNode)) {
 			return;
 		}
 
@@ -44,10 +44,10 @@ public class AddConnectionMutation implements Mutation {
 			toNode = temp;
 		}
 
-		if (genome.isConnected(fromNode.getId(), toNode.getId())) {
+		if (genome.isConnected(fromNode, toNode)) {
 			return;
 		}
 
-		genome.addConnection(Connection.create(fromNode.getId(), toNode.getId()));
+		genome.addConnection(Connection.create(fromNode, toNode));
 	}
 }
