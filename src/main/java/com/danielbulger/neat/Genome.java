@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Genome implements Cloneable {
+public class Genome {
 
 	private final NavigableMap<Integer, Node> nodes = new TreeMap<>();
 
@@ -19,6 +19,13 @@ public class Genome implements Cloneable {
 
 	public Genome(Genome parent) {
 
+		// Make sure we copy the node/connections so updating the value doesn't affect the
+		// referenced parent node.
+		for (final Map.Entry<Innovation, Connection> entry : parent.connections.entrySet()) {
+
+			addConnection(new Connection(entry.getValue()));
+
+		}
 	}
 
 	public Genome(int numInputs, int numOutputs) {
@@ -152,9 +159,9 @@ public class Genome implements Cloneable {
 	public void addConnections(final @NotNull Connection... elements) {
 
 		for (final Connection connection : elements) {
+
 			this.addConnection(connection);
 		}
-
 	}
 
 	@NotNull

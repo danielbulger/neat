@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Innovation implements Comparable<Innovation> {
+public final class Innovation implements Comparable<Innovation> {
 
 	private static final AtomicInteger counter = new AtomicInteger(0);
 

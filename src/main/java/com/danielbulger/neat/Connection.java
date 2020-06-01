@@ -36,7 +36,11 @@ public class Connection {
 	}
 
 	public Connection(@NotNull Connection other) {
-		this(other.from, other.to, other.weight, other.innovation, other.enabled);
+		this.from = new Node(other.from);
+		this.to = new Node(other.to);
+		this.weight = other.getWeight();
+		this.innovation = other.getInnovation();
+		this.enabled = other.isEnabled();
 	}
 
 	@Contract(pure = true)

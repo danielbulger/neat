@@ -27,7 +27,7 @@ public class Node implements Comparable<Node> {
 
 	public Node(@NotNull Node other) {
 		this(other.id, other.type);
-		this.value = other.getValue();
+		this.value = 0;
 	}
 
 	@Contract(pure = true)
