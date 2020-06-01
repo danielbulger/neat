@@ -8,6 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Connection {
 
+	@NotNull
 	public static Connection create(int from, int to) {
 		return new Connection(from, to, ThreadLocalRandom.current().nextFloat(), Innovation.next());
 	}

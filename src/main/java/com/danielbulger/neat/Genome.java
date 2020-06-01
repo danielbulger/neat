@@ -8,10 +8,6 @@ import java.util.stream.Collectors;
 
 public class Genome {
 
-	private final int numInputs;
-
-	private final int numOutputs;
-
 	private final NavigableMap<Integer, Node> nodes = new TreeMap<>();
 
 	private final EnumMap<NodeType, List<Node>> nodeTypes = new EnumMap<>(NodeType.class);
@@ -27,11 +23,7 @@ public class Genome {
 			throw new IllegalArgumentException();
 		}
 
-		this.numInputs = numInputs;
-
-		this.numOutputs = numOutputs;
-
-		this.initialiseNodes();
+		this.initialiseNodes(numInputs, numOutputs);
 	}
 
 	@NotNull
@@ -41,13 +33,13 @@ public class Genome {
 			throw new NullPointerException();
 		}
 
-		if (values.length != numInputs) {
+		final List<Node> inputNodes = nodeTypes.get(NodeType.INPUT);
+
+		if (values.length != inputNodes.size()) {
 			throw new IllegalArgumentException();
 		}
 
-		final List<Node> inputNodes = nodeTypes.get(NodeType.INPUT);
-
-		for(int i = 0; i < numInputs; ++i) {
+		for(int i = 0; i < inputNodes.size(); ++i) {
 			inputNodes.get(i).setValue(values[i]);
 		}
 
@@ -69,9 +61,9 @@ public class Genome {
 			to.setValue(to.getValue() + connection.getWeight() * from.getValue());
 		}
 
-		final float[] output = new float[numOutputs];
-
 		final List<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
+
+		final float[] output = new float[outputNodes.size()];
 
 		for (int i = 0; i < output.length; ++i) {
 			output[i] = outputNodes.get(i).getValue();
@@ -81,15 +73,15 @@ public class Genome {
 	}
 
 	@Contract(mutates = "this")
-	private void initialiseNodes() {
+	private void initialiseNodes(int numInputs, int numOutputs) {
 
 
-		for (int i = 0; i < this.numInputs; ++i) {
+		for (int i = 0; i < numInputs; ++i) {
 			Node node = Node.create(NodeType.INPUT);
 			addNode(node);
 		}
 
-		for (int i = 0; i < this.numOutputs; ++i) {
+		for (int i = 0; i < numOutputs; ++i) {
 			Node node = Node.create(NodeType.OUTPUT);
 			addNode(node);
 		}
