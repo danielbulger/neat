@@ -14,6 +14,8 @@ public class Genome {
 
 	private final List<Connection> connections = new ArrayList<>();
 
+	private final NavigableSet<Innovation> innovations = new TreeSet<>();
+
 	public Genome(int numInputs, int numOutputs) {
 		if (numInputs <= 0) {
 			throw new IllegalArgumentException();
@@ -39,13 +41,13 @@ public class Genome {
 			throw new IllegalArgumentException();
 		}
 
-		for(int i = 0; i < inputNodes.size(); ++i) {
+		for (int i = 0; i < inputNodes.size(); ++i) {
 			inputNodes.get(i).setValue(values[i]);
 		}
 
-		for(final Connection connection : connections) {
+		for (final Connection connection : connections) {
 
-			if(!connection.isEnabled()) {
+			if (!connection.isEnabled()) {
 				continue;
 			}
 
@@ -53,7 +55,7 @@ public class Genome {
 
 			final Node to = nodes.get(connection.getTo());
 
-			if(from == null || to == null) {
+			if (from == null || to == null) {
 				throw new IllegalStateException();
 			}
 
@@ -132,6 +134,8 @@ public class Genome {
 	@Contract(mutates = "this")
 	public void addConnection(final @NotNull Connection connection) {
 		connections.add(connection);
+
+		innovations.add(connection.getInnovation());
 	}
 
 	@Contract(mutates = "this")
@@ -149,7 +153,19 @@ public class Genome {
 
 	@NotNull
 	@Contract(pure = true)
+	public List<Connection> getConnections() {
+		return connections;
+	}
+
+	@NotNull
+	@Contract(pure = true)
 	public NavigableMap<Integer, Node> getNodes() {
 		return nodes;
+	}
+
+	@NotNull
+	@Contract(pure = true)
+	public NavigableSet<Innovation> getInnovations() {
+		return innovations;
 	}
 }

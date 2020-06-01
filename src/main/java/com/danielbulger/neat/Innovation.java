@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Innovation {
+public class Innovation implements Comparable<Innovation> {
 
 	private static final AtomicInteger counter = new AtomicInteger(0);
 
@@ -42,5 +42,10 @@ public class Innovation {
 		return "Innovation{" +
 			"id=" + id +
 			'}';
+	}
+
+	@Override
+	public int compareTo(@NotNull Innovation o) {
+		return Integer.compare(id, o.id);
 	}
 }
