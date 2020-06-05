@@ -35,7 +35,6 @@ public class Node implements Comparable<Node> {
 		return value;
 	}
 
-	@Contract(mutates = "this")
 	public void setValue(float value) {
 		this.value = value;
 	}

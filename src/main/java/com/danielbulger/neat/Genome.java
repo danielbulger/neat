@@ -41,7 +41,6 @@ public class Genome {
 	}
 
 	@NotNull
-	@Contract(mutates = "this")
 	public float[] feedForward(@NotNull float[] values) {
 		if (values == null) {
 			throw new NullPointerException();
@@ -86,7 +85,6 @@ public class Genome {
 		return output;
 	}
 
-	@Contract(mutates = "this")
 	private void initialiseNodes(int numInputs, int numOutputs) {
 
 
@@ -125,7 +123,6 @@ public class Genome {
 		return false;
 	}
 
-	@Contract(mutates = "this")
 	public void addNode(final @NotNull Node node) {
 		if (nodes.containsKey(node.getId())) {
 			throw new IllegalArgumentException();
@@ -141,7 +138,6 @@ public class Genome {
 		nodes.add(node);
 	}
 
-	@Contract(mutates = "this")
 	public void addConnection(final @NotNull Connection connection) {
 
 		connections.put(connection.getInnovation(), connection);
@@ -155,7 +151,6 @@ public class Genome {
 		}
 	}
 
-	@Contract(mutates = "this")
 	public void addConnections(final @NotNull Connection... elements) {
 
 		for (final Connection connection : elements) {

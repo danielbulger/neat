@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class Species {
+public class Species implements Comparable<Species> {
 
 	private Phenotype best;
 
@@ -17,18 +17,18 @@ public class Species {
 
 	private int staleness = 0;
 
-	@Contract(mutates = "this")
 	public void add(@NotNull Phenotype phenotype) {
 		this.phenotypes.add(phenotype);
 	}
 
-	@Contract(mutates = "this")
-	public void sort() {
-		phenotypes.sort(Comparator.naturalOrder());
+	private void sort() {
+		phenotypes.sort(Comparator.reverseOrder());
 	}
 
-	@Contract(mutates = "this")
 	public void updateBest() {
+
+		this.sort();
+
 		final Phenotype currentBest = getCurrentBest();
 
 		if (currentBest.compareTo(this.best) > 0) {
@@ -44,14 +44,30 @@ public class Species {
 		}
 	}
 
+	public void cull() {
+
+		if (phenotypes.size() < 2) {
+			return;
+		}
+
+		for (int start = phenotypes.size() / 2, end = phenotypes.size() - 1; end > start; --end) {
+			phenotypes.remove(end);
+		}
+	}
+
 	@Contract(pure = true)
 	public float getTotalFitness() {
-		return phenotypes.stream()
-			.reduce(
-				0.0f,
-				(partial, phenotype) -> phenotype.getFitness() + partial,
-				Float::sum
-			);
+		return (float) phenotypes.stream().mapToDouble(Phenotype::getFitness).sum();
+	}
+
+	@Contract(pure = true)
+	public float getAverageFitness() {
+
+		return getTotalFitness() / phenotypes.size();
+	}
+
+	public int getStaleness() {
+		return staleness;
 	}
 
 	@NotNull
@@ -60,7 +76,6 @@ public class Species {
 		return phenotypes.get(0);
 	}
 
-	@Contract(mutates = "this")
 	public void clear() {
 		phenotypes.clear();
 	}
@@ -69,5 +84,15 @@ public class Species {
 	@Contract(pure = true)
 	public List<Phenotype> getPhenotypes() {
 		return phenotypes;
+	}
+
+	@Contract(pure = true)
+	public boolean isEmpty() {
+		return phenotypes.isEmpty();
+	}
+
+	@Override
+	public int compareTo(@NotNull Species o) {
+		return Float.compare(highestFitness, o.highestFitness);
 	}
 }

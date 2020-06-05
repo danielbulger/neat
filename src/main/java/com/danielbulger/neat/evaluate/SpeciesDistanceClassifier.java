@@ -5,9 +5,10 @@ import com.danielbulger.neat.util.Random;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.NavigableMap;
+import java.util.Optional;
 
-public class CompatibilitySpeciesEvaluate implements SpeciesEvaluate {
+public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 	private final float disjointWeighting;
 
@@ -17,7 +18,7 @@ public class CompatibilitySpeciesEvaluate implements SpeciesEvaluate {
 
 	private final float threshold;
 
-	public CompatibilitySpeciesEvaluate(
+	public SpeciesDistanceClassifier(
 		float disjointWeighting,
 		float excessWeighting,
 		float weightWeighting,

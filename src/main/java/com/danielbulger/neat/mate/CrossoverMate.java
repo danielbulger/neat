@@ -60,7 +60,7 @@ public class CrossoverMate implements Mate {
 			} else {
 
 				// Otherwise we only include the ones from the fittest parent.
-				if(bestConnections.containsKey(innovation)) {
+				if (bestConnections.containsKey(innovation)) {
 					connection = bestConnections.get(innovation);
 				}
 

@@ -58,7 +58,6 @@ public class Connection {
 		return weight;
 	}
 
-	@Contract(mutates = "this")
 	public void setWeight(float weight) {
 		this.weight = weight;
 	}
@@ -73,7 +72,6 @@ public class Connection {
 		return enabled;
 	}
 
-	@Contract(mutates = "this")
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
