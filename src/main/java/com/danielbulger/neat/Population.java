@@ -165,9 +165,9 @@ public class Population {
 		species.forEach(Species::clear);
 
 		for (final Phenotype phenotype : phenotypes) {
-			final Species species = classify(phenotype);
+			final Species sp = classify(phenotype);
 
-			species.add(phenotype);
+			sp.add(phenotype);
 		}
 
 		final Iterator<Species> it = species.iterator();

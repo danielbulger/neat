@@ -31,7 +31,7 @@ public class Species implements Comparable<Species> {
 
 		final Phenotype currentBest = getCurrentBest();
 
-		if (currentBest.compareTo(this.best) > 0) {
+		if (best == null || currentBest.compareTo(this.best) > 0) {
 
 			staleness = 0;
 

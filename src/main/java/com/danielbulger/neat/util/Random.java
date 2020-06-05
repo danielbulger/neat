@@ -37,7 +37,7 @@ public class Random {
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
 
-		final int element = random.nextInt(list.size() - 1);
+		final int element = random.nextInt(list.size());
 
 		return Optional.of(list.get(element));
 	}
