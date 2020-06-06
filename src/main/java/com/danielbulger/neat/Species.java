@@ -9,27 +9,27 @@ import java.util.List;
 
 public class Species implements Comparable<Species> {
 
-	private Phenotype best;
+	private Genome best;
 
 	private float highestFitness = Float.MIN_VALUE;
 
-	private final List<Phenotype> phenotypes = new ArrayList<>();
+	private final List<Genome> genomes = new ArrayList<>();
 
 	private int staleness = 0;
 
-	public void add(@NotNull Phenotype phenotype) {
-		this.phenotypes.add(phenotype);
+	public void add(@NotNull Genome genome) {
+		this.genomes.add(genome);
 	}
 
 	private void sort() {
-		phenotypes.sort(Comparator.reverseOrder());
+		genomes.sort(Comparator.reverseOrder());
 	}
 
 	public void updateBest() {
 
 		this.sort();
 
-		final Phenotype currentBest = getCurrentBest();
+		final Genome currentBest = getCurrentBest();
 
 		if (best == null || currentBest.compareTo(this.best) > 0) {
 
@@ -46,24 +46,24 @@ public class Species implements Comparable<Species> {
 
 	public void cull() {
 
-		if (phenotypes.size() < 2) {
+		if (genomes.size() < 2) {
 			return;
 		}
 
-		for (int start = phenotypes.size() / 2, end = phenotypes.size() - 1; end > start; --end) {
-			phenotypes.remove(end);
+		for (int start = genomes.size() / 2, end = genomes.size() - 1; end > start; --end) {
+			genomes.remove(end);
 		}
 	}
 
 	@Contract(pure = true)
 	public float getTotalFitness() {
-		return (float) phenotypes.stream().mapToDouble(Phenotype::getFitness).sum();
+		return (float) genomes.stream().mapToDouble(Genome::getFitness).sum();
 	}
 
 	@Contract(pure = true)
 	public float getAverageFitness() {
 
-		return getTotalFitness() / phenotypes.size();
+		return getTotalFitness() / genomes.size();
 	}
 
 	public int getStaleness() {
@@ -72,23 +72,23 @@ public class Species implements Comparable<Species> {
 
 	@NotNull
 	@Contract(pure = true)
-	public Phenotype getCurrentBest() {
-		return phenotypes.get(0);
+	public Genome getCurrentBest() {
+		return genomes.get(0);
 	}
 
 	public void clear() {
-		phenotypes.clear();
+		genomes.clear();
 	}
 
 	@NotNull
 	@Contract(pure = true)
-	public List<Phenotype> getPhenotypes() {
-		return phenotypes;
+	public List<Genome> getGenomes() {
+		return genomes;
 	}
 
 	@Contract(pure = true)
 	public boolean isEmpty() {
-		return phenotypes.isEmpty();
+		return genomes.isEmpty();
 	}
 
 	@Override

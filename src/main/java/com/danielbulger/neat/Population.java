@@ -20,7 +20,7 @@ public class Population {
 
 	private final List<Species> species = new ArrayList<>();
 
-	private final List<Phenotype> phenotypes = new ArrayList<>();
+	private final List<Genome> genomes = new ArrayList<>();
 
 	private int generationNum = 0;
 
@@ -35,23 +35,19 @@ public class Population {
 
 	public void populate(int size) {
 
-		for (int i = phenotypes.size(); i < size; ++i) {
+		for (int i = genomes.size(); i < size; ++i) {
 
-			final Phenotype phenotype = new Phenotype(
-				new Genome(config.getNumInputs(), config.getNumOutputs())
-			);
-
-			phenotypes.add(phenotype);
+			genomes.add(new Genome(config.getNumInputs(), config.getNumOutputs()));
 		}
 	}
 
-	private void updatePhenotypeFitness() {
+	private void updateGenomeFitness() {
 
-		for (final Phenotype phenotype : phenotypes) {
+		for (final Genome genome : genomes) {
 
-			final float fitness = evolution.getGenomeFitnessEvaluator().evaluate(phenotype.getGenome());
+			final float fitness = evolution.getGenomeFitnessEvaluator().evaluate(genome);
 
-			phenotype.setFitness(fitness);
+			genome.setFitness(fitness);
 		}
 	}
 
@@ -65,7 +61,7 @@ public class Population {
 
 		final double sum = getTotalFitness();
 
-		final List<Phenotype> children = new ArrayList<>();
+		final List<Genome> children = new ArrayList<>();
 
 		for (final Species sp : species) {
 
@@ -82,7 +78,7 @@ public class Population {
 		// If there is any more room for children
 		// populate the remaining space from a random
 		// selection
-		while (children.size() < phenotypes.size()) {
+		while (children.size() < genomes.size()) {
 
 			final Optional<Species> speciesOptional = Random.fromList(species);
 
@@ -94,17 +90,17 @@ public class Population {
 		}
 
 		// Replace all the parents with the newest generation.
-		phenotypes.clear();
+		genomes.clear();
 
-		phenotypes.addAll(children);
+		genomes.addAll(children);
 	}
 
 	@Contract(pure = true)
-	private Phenotype makeChild(final Species species) {
+	private Genome makeChild(final Species species) {
 
-		final Phenotype mother = evolution.getPhenotypeSelect().select(species);
+		final Genome mother = evolution.getGenomeSelect().select(species);
 
-		final Phenotype father = evolution.getPhenotypeSelect().select(species);
+		final Genome father = evolution.getGenomeSelect().select(species);
 
 		final Mate mate = evolution.getMateStrategy();
 
@@ -112,24 +108,24 @@ public class Population {
 
 		evolution.mutate(child);
 
-		return new Phenotype(child);
+		return child;
 	}
 
 	private void update() {
 		++generationNum;
 
-		updatePhenotypeFitness();
+		updateGenomeFitness();
 
 		updateSpecies();
 	}
 
 	@NotNull
-	private Species classify(final @NotNull Phenotype phenotype) {
+	private Species classify(final @NotNull Genome genome) {
 
 		final SpeciesClassifier classifier = evolution.getSpeciesClassifier();
 
 		for (final Species s : species) {
-			if (classifier.isWithinSpecies(s, phenotype.getGenome())) {
+			if (classifier.isWithinSpecies(s, genome)) {
 				return s;
 			}
 		}
@@ -140,21 +136,21 @@ public class Population {
 	}
 
 	@NotNull
-	public Phenotype getBest() {
+	public Genome getBest() {
 
-		Phenotype best = null;
+		Genome best = null;
 
 		for (final Species s : species) {
 
-			for (final Phenotype phenotype : s.getPhenotypes()) {
-				if (best == null || phenotype.compareTo(best) > 0) {
-					best = phenotype;
+			for (final Genome genome : s.getGenomes()) {
+				if (best == null || genome.compareTo(best) > 0) {
+					best = genome;
 				}
 			}
 		}
 
 		if (best == null) {
-			throw new IllegalStateException("Population has no best phenotype");
+			throw new IllegalStateException("Population has no best Genome");
 		}
 
 		return best;
@@ -164,10 +160,10 @@ public class Population {
 
 		species.forEach(Species::clear);
 
-		for (final Phenotype phenotype : phenotypes) {
-			final Species sp = classify(phenotype);
+		for (final Genome genome : genomes) {
+			final Species sp = classify(genome);
 
-			sp.add(phenotype);
+			sp.add(genome);
 		}
 
 		final Iterator<Species> it = species.iterator();
@@ -217,7 +213,7 @@ public class Population {
 
 	@Contract(pure = true)
 	private int getNumSpeciesBreeds(double totalFitness, Species species) {
-		return (int) Math.floor(species.getAverageFitness() / totalFitness * phenotypes.size());
+		return (int) Math.floor(species.getAverageFitness() / totalFitness * genomes.size());
 	}
 
 	private double getTotalFitness() {

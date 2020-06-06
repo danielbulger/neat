@@ -1,6 +1,6 @@
 package com.danielbulger.neat.select;
 
-import com.danielbulger.neat.Phenotype;
+import com.danielbulger.neat.Genome;
 import com.danielbulger.neat.Species;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -11,24 +11,23 @@ public class WeightedFitnessSelect implements Select {
 
 	@Override
 	@Contract(pure = true)
-	public @NotNull Phenotype select(@NotNull Species species) {
+	public @NotNull Genome select(@NotNull Species species) {
 
 		final float fitness = (float) ThreadLocalRandom.current().nextDouble(0, species.getTotalFitness());
 
 		float sum = 0;
 
-		for (final Phenotype phenotype : species.getPhenotypes()) {
+		for (final Genome genome : species.getGenomes()) {
 
-			sum += phenotype.getFitness();
+			sum += genome.getFitness();
 
 			if (sum > fitness) {
 
-				return phenotype;
+				return genome;
 
 			}
-
 		}
 
-		throw new IllegalStateException("Unable to select Phenotype from " + species);
+		throw new IllegalStateException("Unable to select Genome from " + species);
 	}
 }

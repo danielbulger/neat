@@ -35,13 +35,13 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 		final int factor = 1;
 
-		final Optional<Phenotype> phenotypeOptional = Random.fromList(species.getPhenotypes());
+		final Optional<Genome> optionalGenome = Random.fromList(species.getGenomes());
 
-		if (!phenotypeOptional.isPresent()) {
+		if (!optionalGenome.isPresent()) {
 			return false;
 		}
 
-		final Genome rep = phenotypeOptional.get().getGenome();
+		final Genome rep = optionalGenome.get();
 
 		final float excess = (excessWeighting * getExcess(rep, genome)) / factor;
 

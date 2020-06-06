@@ -6,13 +6,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Genome {
+public class Genome implements Comparable<Genome> {
 
 	private final NavigableMap<Integer, Node> nodes = new TreeMap<>();
 
 	private final EnumMap<NodeType, List<Node>> nodeTypes = new EnumMap<>(NodeType.class);
 
 	private final NavigableMap<Innovation, Connection> connections = new TreeMap<>();
+
+	private float fitness;
 
 	public Genome() {
 	}
@@ -24,8 +26,9 @@ public class Genome {
 		for (final Map.Entry<Innovation, Connection> entry : parent.connections.entrySet()) {
 
 			addConnection(new Connection(entry.getValue()));
-
 		}
+
+		fitness = parent.fitness;
 	}
 
 	public Genome(int numInputs, int numOutputs) {
@@ -178,5 +181,18 @@ public class Genome {
 	@Contract(pure = true)
 	public NavigableMap<Integer, Node> getNodes() {
 		return nodes;
+	}
+
+	public float getFitness() {
+		return fitness;
+	}
+
+	public void setFitness(float fitness) {
+		this.fitness = fitness;
+	}
+
+	@Override
+	public int compareTo(@NotNull Genome o) {
+		return Float.compare(fitness, o.fitness);
 	}
 }

@@ -3,7 +3,6 @@ package com.danielbulger.neat.mate;
 import com.danielbulger.neat.Connection;
 import com.danielbulger.neat.Genome;
 import com.danielbulger.neat.Innovation;
-import com.danielbulger.neat.Phenotype;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,15 +20,15 @@ public class CrossoverMate implements Mate {
 	}
 
 	@Contract(pure = true)
-	private Genome crossover(@NotNull Phenotype best, @NotNull Phenotype other) {
+	private Genome crossover(@NotNull Genome best, @NotNull Genome other) {
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
 
 		final Genome genome = new Genome();
 
-		final Map<Innovation, Connection> bestConnections = best.getGenome().getConnections();
+		final Map<Innovation, Connection> bestConnections = best.getConnections();
 
-		final Map<Innovation, Connection> otherConnections = other.getGenome().getConnections();
+		final Map<Innovation, Connection> otherConnections = other.getConnections();
 
 		final Set<Innovation> innovations = new TreeSet<>(bestConnections.keySet());
 		innovations.addAll(otherConnections.keySet());
@@ -77,7 +76,7 @@ public class CrossoverMate implements Mate {
 
 	@Override
 	@Contract(pure = true)
-	public @NotNull Genome mate(@NotNull Phenotype mother, @NotNull Phenotype father) {
+	public @NotNull Genome mate(@NotNull Genome mother, @NotNull Genome father) {
 
 		if (mother.compareTo(father) > 0) {
 

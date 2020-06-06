@@ -28,7 +28,7 @@ public class Evolution {
 
 	private final SpeciesClassifier speciesClassifier;
 
-	private final Select phenotypeSelect;
+	private final Select genomeSelect;
 
 	private final Map<Mate, Float> mateStrategy;
 
@@ -40,11 +40,11 @@ public class Evolution {
 		final @NotNull Properties properties,
 		final @NotNull SpeciesClassifier speciesClassifier,
 		final @NotNull GenomeFitnessEvaluator genomeFitnessEvaluator,
-		final @NotNull Select phenotypeSelect
+		final @NotNull Select genomeSelect
 	) {
 		this.config = new Config(properties);
 
-		this.phenotypeSelect = Objects.requireNonNull(phenotypeSelect);
+		this.genomeSelect = Objects.requireNonNull(genomeSelect);
 
 		this.genomeFitnessEvaluator = Objects.requireNonNull(genomeFitnessEvaluator);
 
@@ -62,7 +62,7 @@ public class Evolution {
 		this.population.populate(config.getPopulationSize());
 	}
 
-	public Phenotype evolve() {
+	public Genome evolve() {
 		population.makeNextGeneration();
 
 		return population.getBest();
@@ -134,8 +134,8 @@ public class Evolution {
 		throw new IllegalStateException("Unable to choose mate strategy");
 	}
 
-	public Select getPhenotypeSelect() {
-		return phenotypeSelect;
+	public Select getGenomeSelect() {
+		return genomeSelect;
 	}
 
 	public GenomeFitnessEvaluator getGenomeFitnessEvaluator() {
