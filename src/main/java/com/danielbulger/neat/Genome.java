@@ -1,5 +1,6 @@
 package com.danielbulger.neat;
 
+import com.danielbulger.neat.util.MathUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +75,7 @@ public class Genome implements Comparable<Genome> {
 			}
 
 			// TODO: Need to fix so 'from' is completely processed before 'to' is so the value is correct in a multilayer network.
-			to.setValue(to.getValue() + connection.getWeight() * from.getValue());
+			to.setValue(MathUtil.sigmoid(to.getValue() + connection.getWeight() * from.getValue()));
 		}
 
 		final List<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
@@ -82,7 +83,7 @@ public class Genome implements Comparable<Genome> {
 		final float[] output = new float[outputNodes.size()];
 
 		for (int i = 0; i < output.length; ++i) {
-			output[i] = outputNodes.get(i).getValue();
+			output[i] = MathUtil.sigmoid(outputNodes.get(i).getValue());
 		}
 
 		return output;

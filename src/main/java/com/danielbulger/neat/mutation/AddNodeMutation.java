@@ -19,7 +19,7 @@ public class AddNodeMutation implements Mutation {
 
 		final Optional<Connection> optionalConnection = Random.fromList(connections);
 
-		if(!optionalConnection.isPresent()) {
+		if(optionalConnection.isEmpty()) {
 			return;
 		}
 

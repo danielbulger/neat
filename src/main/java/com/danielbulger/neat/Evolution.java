@@ -1,6 +1,5 @@
 package com.danielbulger.neat;
 
-import com.danielbulger.neat.evaluate.GenomeFitnessEvaluator;
 import com.danielbulger.neat.evaluate.SpeciesClassifier;
 import com.danielbulger.neat.mate.CloneMate;
 import com.danielbulger.neat.mate.CrossoverMate;
@@ -13,18 +12,11 @@ import com.danielbulger.neat.select.Select;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Evolution {
-
-	private final Config config;
-
-	private final GenomeFitnessEvaluator genomeFitnessEvaluator;
 
 	private final SpeciesClassifier speciesClassifier;
 
@@ -39,14 +31,11 @@ public class Evolution {
 	public Evolution(
 		final @NotNull Properties properties,
 		final @NotNull SpeciesClassifier speciesClassifier,
-		final @NotNull GenomeFitnessEvaluator genomeFitnessEvaluator,
 		final @NotNull Select genomeSelect
 	) {
-		this.config = new Config(properties);
+		final Config config = new Config(properties);
 
 		this.genomeSelect = Objects.requireNonNull(genomeSelect);
-
-		this.genomeFitnessEvaluator = Objects.requireNonNull(genomeFitnessEvaluator);
 
 		this.speciesClassifier = Objects.requireNonNull(speciesClassifier);
 
@@ -54,10 +43,7 @@ public class Evolution {
 
 		this.mateStrategy = this.initialiseMates(config);
 
-		this.population = new Population(
-			config,
-			this
-		);
+		this.population = new Population(config, this);
 
 		this.population.populate(config.getPopulationSize());
 	}
@@ -125,7 +111,7 @@ public class Evolution {
 
 			sum += entry.getValue();
 
-			if(sum >= chance) {
+			if (sum >= chance) {
 				return entry.getKey();
 			}
 
@@ -138,11 +124,11 @@ public class Evolution {
 		return genomeSelect;
 	}
 
-	public GenomeFitnessEvaluator getGenomeFitnessEvaluator() {
-		return genomeFitnessEvaluator;
-	}
-
 	public SpeciesClassifier getSpeciesClassifier() {
 		return speciesClassifier;
+	}
+
+	public Collection<Genome> getGenomes() {
+		return population.getGenomes();
 	}
 }

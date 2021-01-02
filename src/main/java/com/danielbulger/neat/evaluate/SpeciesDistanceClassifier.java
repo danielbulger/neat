@@ -1,6 +1,9 @@
 package com.danielbulger.neat.evaluate;
 
-import com.danielbulger.neat.*;
+import com.danielbulger.neat.Connection;
+import com.danielbulger.neat.Genome;
+import com.danielbulger.neat.Innovation;
+import com.danielbulger.neat.Species;
 import com.danielbulger.neat.util.Random;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +20,10 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 	private final float weightWeighting;
 
 	private final float threshold;
+
+	public SpeciesDistanceClassifier() {
+		this(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 
 	public SpeciesDistanceClassifier(
 		float disjointWeighting,
@@ -37,7 +44,7 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 		final Optional<Genome> optionalGenome = Random.fromList(species.getGenomes());
 
-		if (!optionalGenome.isPresent()) {
+		if (optionalGenome.isEmpty()) {
 			return false;
 		}
 

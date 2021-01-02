@@ -15,7 +15,7 @@ public class ConnectionWeightMutation implements Mutation {
 
 		final Optional<Connection> optionalConnection = Random.fromList(genome.getActiveConnections());
 
-		if(!optionalConnection.isPresent()) {
+		if(optionalConnection.isEmpty()) {
 			return;
 		}
 

@@ -20,7 +20,7 @@ public class AddConnectionMutation implements Mutation {
 
 		final Optional<Node> optionalSecondNode = Random.fromMap(nodes);
 
-		if (!optionalFirstNode.isPresent() || !optionalSecondNode.isPresent()) {
+		if (optionalFirstNode.isEmpty() || optionalSecondNode.isEmpty()) {
 			return;
 		}
 

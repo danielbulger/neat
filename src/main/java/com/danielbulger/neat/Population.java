@@ -1,7 +1,6 @@
 package com.danielbulger.neat;
 
 import com.danielbulger.neat.evaluate.SpeciesClassifier;
-import com.danielbulger.neat.mate.Mate;
 import com.danielbulger.neat.util.Random;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +21,6 @@ public class Population {
 
 	private final List<Genome> genomes = new ArrayList<>();
 
-	private int generationNum = 0;
-
 	public Population(
 		final @NotNull Config config,
 		final @NotNull Evolution evolution
@@ -38,16 +35,6 @@ public class Population {
 		for (int i = genomes.size(); i < size; ++i) {
 
 			genomes.add(new Genome(config.getNumInputs(), config.getNumOutputs()));
-		}
-	}
-
-	private void updateGenomeFitness() {
-
-		for (final Genome genome : genomes) {
-
-			final float fitness = evolution.getGenomeFitnessEvaluator().evaluate(genome);
-
-			genome.setFitness(fitness);
 		}
 	}
 
@@ -82,7 +69,7 @@ public class Population {
 
 			final Optional<Species> speciesOptional = Random.fromList(species);
 
-			if (!speciesOptional.isPresent()) {
+			if (speciesOptional.isEmpty()) {
 				continue;
 			}
 
@@ -102,9 +89,7 @@ public class Population {
 
 		final Genome father = evolution.getGenomeSelect().select(species);
 
-		final Mate mate = evolution.getMateStrategy();
-
-		final Genome child = mate.mate(mother, father);
+		final Genome child = evolution.getMateStrategy().mate(mother, father);
 
 		evolution.mutate(child);
 
@@ -112,10 +97,6 @@ public class Population {
 	}
 
 	private void update() {
-		++generationNum;
-
-		updateGenomeFitness();
-
 		updateSpecies();
 	}
 
@@ -220,5 +201,10 @@ public class Population {
 		return species.stream()
 			.mapToDouble(Species::getAverageFitness)
 			.sum();
+	}
+
+	public Collection<Genome> getGenomes() {
+		// The caller should not mutated the populate state directly.
+		return Collections.unmodifiableCollection(genomes);
 	}
 }
