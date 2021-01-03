@@ -32,7 +32,9 @@ public class Population {
 
 	public void populate(int size) {
 
-		for (int i = genomes.size(); i < size; ++i) {
+		final int initSize = genomes.size();
+
+		for (int i = initSize; i < size; ++i) {
 
 			genomes.add(new Genome(config.getNumInputs(), config.getNumOutputs()));
 		}
@@ -172,11 +174,14 @@ public class Population {
 
 		final double sum = getTotalFitness();
 
+		// Skip the best species.
+		it.next();
+
 		while (it.hasNext()) {
 			final Species sp = it.next();
 
 			if (sp.getStaleness() >= config.getStaleThreshold()) {
-				LOG.info("Species was removed due to staleness({})", sp.getStaleness());
+				LOG.debug("Species was removed due to staleness({})", sp.getStaleness());
 				it.remove();
 				continue;
 			}
@@ -186,7 +191,7 @@ public class Population {
 			final int numBreeds = getNumSpeciesBreeds(sum, sp);
 
 			if (numBreeds < 1) {
-				LOG.info("Species was removed due to not enough breeds({})", numBreeds);
+				LOG.debug("Species was removed due to not enough breeds({})", numBreeds);
 				it.remove();
 			}
 		}
@@ -203,8 +208,8 @@ public class Population {
 			.sum();
 	}
 
-	public Collection<Genome> getGenomes() {
+	public List<Genome> getGenomes() {
 		// The caller should not mutated the populate state directly.
-		return Collections.unmodifiableCollection(genomes);
+		return genomes;
 	}
 }

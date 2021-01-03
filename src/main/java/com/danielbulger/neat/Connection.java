@@ -8,9 +8,12 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Connection {
 
-	@NotNull
 	public static Connection create(Node from, Node to) {
-		return new Connection(from, to, ThreadLocalRandom.current().nextFloat(), Innovation.next());
+		return create(from, to, ThreadLocalRandom.current().nextFloat());
+	}
+
+	public static Connection create(Node from, Node to, float weight) {
+		return new Connection(from, to, weight, Innovation.next(), true);
 	}
 
 	private final Node from;
@@ -22,10 +25,6 @@ public class Connection {
 	private final Innovation innovation;
 
 	private boolean enabled;
-
-	public Connection(Node from, Node to, float weight, Innovation innovation) {
-		this(from, to, weight, innovation, true);
-	}
 
 	public Connection(Node from, Node to, float weight, Innovation innovation, boolean enabled) {
 		this.from = from;

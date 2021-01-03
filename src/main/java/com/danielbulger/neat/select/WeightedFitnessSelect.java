@@ -13,7 +13,13 @@ public class WeightedFitnessSelect implements Select {
 	@Contract(pure = true)
 	public @NotNull Genome select(@NotNull Species species) {
 
-		final float fitness = (float) ThreadLocalRandom.current().nextDouble(0, species.getTotalFitness());
+		final float totalFitness = species.getTotalFitness();
+
+		if(!(totalFitness > 0f)) {
+			return species.getGenomes().get(0);
+		}
+
+		final float fitness = (float) ThreadLocalRandom.current().nextDouble(species.getTotalFitness());
 
 		float sum = 0;
 
@@ -21,7 +27,7 @@ public class WeightedFitnessSelect implements Select {
 
 			sum += genome.getFitness();
 
-			if (sum > fitness) {
+			if (sum >= fitness) {
 
 				return genome;
 

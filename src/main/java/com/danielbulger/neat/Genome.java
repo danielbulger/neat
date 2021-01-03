@@ -1,6 +1,5 @@
 package com.danielbulger.neat;
 
-import com.danielbulger.neat.util.MathUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,11 +21,21 @@ public class Genome implements Comparable<Genome> {
 
 	public Genome(Genome parent) {
 
+		for (final Node node : parent.nodes.values()) {
+			addNode(new Node(node));
+		}
+
 		// Make sure we copy the node/connections so updating the value doesn't affect the
 		// referenced parent node.
 		for (final Map.Entry<Innovation, Connection> entry : parent.connections.entrySet()) {
 
-			addConnection(new Connection(entry.getValue()));
+			final Connection connection = entry.getValue();
+
+			final Node from = nodes.get(connection.getFrom().getId());
+
+			final Node to = nodes.get(connection.getTo().getId());
+
+			addConnection(new Connection(from, to, connection.getWeight(), entry.getKey(), connection.isEnabled()));
 		}
 
 		fitness = parent.fitness;
@@ -34,18 +43,17 @@ public class Genome implements Comparable<Genome> {
 
 	public Genome(int numInputs, int numOutputs) {
 		if (numInputs <= 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("must have at least 1 input");
 		}
 
 		if (numOutputs <= 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("must have at least 1 output");
 		}
 
 		this.initialiseNodes(numInputs, numOutputs);
 	}
 
-	@NotNull
-	public float[] feedForward(@NotNull float[] values) {
+	public float[] feedForward(float[] values) {
 		if (values == null) {
 			throw new NullPointerException();
 		}
@@ -56,26 +64,17 @@ public class Genome implements Comparable<Genome> {
 			throw new IllegalArgumentException();
 		}
 
+		// Clear the previous network state.
+		for (final Node node : nodes.values()) {
+			node.reset();
+		}
+
 		for (int i = 0; i < inputNodes.size(); ++i) {
 			inputNodes.get(i).setValue(values[i]);
 		}
 
-		for (final Connection connection : connections.values()) {
-
-			if (!connection.isEnabled()) {
-				continue;
-			}
-
-			final Node from = nodes.get(connection.getFrom().getId());
-
-			final Node to = nodes.get(connection.getTo().getId());
-
-			if (from == null || to == null) {
-				throw new IllegalStateException();
-			}
-
-			// TODO: Need to fix so 'from' is completely processed before 'to' is so the value is correct in a multilayer network.
-			to.setValue(MathUtil.sigmoid(to.getValue() + connection.getWeight() * from.getValue()));
+		for (final Node node : inputNodes) {
+			node.process();
 		}
 
 		final List<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
@@ -83,14 +82,13 @@ public class Genome implements Comparable<Genome> {
 		final float[] output = new float[outputNodes.size()];
 
 		for (int i = 0; i < output.length; ++i) {
-			output[i] = MathUtil.sigmoid(outputNodes.get(i).getValue());
+			output[i] = outputNodes.get(i).getValue();
 		}
 
 		return output;
 	}
 
 	private void initialiseNodes(int numInputs, int numOutputs) {
-
 
 		for (int i = 0; i < numInputs; ++i) {
 			addNode(Node.create(NodeType.INPUT));
@@ -100,15 +98,16 @@ public class Genome implements Comparable<Genome> {
 			addNode(Node.create(NodeType.OUTPUT));
 		}
 
-		for (final Node input : nodeTypes.get(NodeType.INPUT)) {
+		final Collection<Node> inputNodes = nodeTypes.get(NodeType.INPUT);
 
-			for (final Node output : nodeTypes.get(NodeType.OUTPUT)) {
+		final Collection<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
+
+		for (final Node input : inputNodes) {
+
+			for (final Node output : outputNodes) {
 
 				this.addConnection(Connection.create(
-
-					input,
-
-					output
+					input, output
 				));
 			}
 		}
@@ -134,12 +133,14 @@ public class Genome implements Comparable<Genome> {
 
 		nodes.put(node.getId(), node);
 
-		final Collection<Node> nodes = nodeTypes.computeIfAbsent(
-			node.getType(),
-			k -> new ArrayList<>()
-		);
+		List<Node> nodes = nodeTypes.get(node.getType());
+
+		if (nodes == null) {
+			nodes = new ArrayList<>();
+		}
 
 		nodes.add(node);
+		nodeTypes.put(node.getType(), nodes);
 	}
 
 	public void addConnection(final @NotNull Connection connection) {
@@ -153,6 +154,9 @@ public class Genome implements Comparable<Genome> {
 		if (!nodes.containsKey(connection.getTo().getId())) {
 			addNode(connection.getTo());
 		}
+
+		connection.getFrom().addOutgoingConnection(connection);
+		connection.getTo().addIncomingConnection(connection);
 	}
 
 	public void addConnections(final @NotNull Connection... elements) {
@@ -195,5 +199,14 @@ public class Genome implements Comparable<Genome> {
 	@Override
 	public int compareTo(@NotNull Genome o) {
 		return Float.compare(fitness, o.fitness);
+	}
+
+	@Override
+	public String toString() {
+		return "Genome{" +
+			"nodes=" + nodes +
+			", connections=" + connections +
+			", fitness=" + fitness +
+			'}';
 	}
 }

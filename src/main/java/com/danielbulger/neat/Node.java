@@ -1,8 +1,11 @@
 package com.danielbulger.neat;
 
+import com.danielbulger.neat.util.MathUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,11 +17,17 @@ public class Node implements Comparable<Node> {
 		return new Node(counter.incrementAndGet(), type);
 	}
 
+	private final List<Connection> incomingConnections = new ArrayList<>();
+
+	private final List<Connection> outgoingConnections = new ArrayList<>();
+
 	private final int id;
 
 	private final NodeType type;
 
 	private float value = 0;
+
+	private boolean processed = false;
 
 	public Node(int id, @NotNull NodeType type) {
 		this.id = id;
@@ -28,6 +37,63 @@ public class Node implements Comparable<Node> {
 	public Node(@NotNull Node other) {
 		this(other.id, other.type);
 		this.value = 0;
+		this.processed = false;
+	}
+
+	private boolean isReady() {
+		for (final Connection connection : incomingConnections) {
+			if (!connection.getFrom().processed) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public void process() {
+
+		if (type.shouldActivate()) {
+			this.value = MathUtil.sigmoid(this.value);
+		}
+
+		for (final Connection connection : outgoingConnections) {
+
+			if (!connection.isEnabled()) {
+				continue;
+			}
+
+			connection.getTo().value += (connection.getWeight() * this.value);
+		}
+
+		this.processed = true;
+
+		for (final Connection connection : outgoingConnections) {
+			if (connection.getTo().isReady()) {
+				connection.getTo().process();
+			}
+		}
+	}
+
+	public void reset() {
+		this.value = 0f;
+		this.processed = false;
+	}
+
+	public void addIncomingConnection(final Connection connection) {
+
+		if(!connection.getTo().equals(this)) {
+			throw new IllegalArgumentException();
+		}
+
+		this.incomingConnections.add(connection);
+	}
+
+	public void addOutgoingConnection(final Connection connection) {
+		if(!connection.getFrom().equals(this)) {
+			throw new IllegalArgumentException();
+		}
+
+		this.outgoingConnections.add(connection);
 	}
 
 	@Contract(pure = true)
@@ -73,6 +139,8 @@ public class Node implements Comparable<Node> {
 		return "Node{" +
 			"id=" + id +
 			", type=" + type +
+			", value=" + value +
+			", processed=" + processed +
 			'}';
 	}
 

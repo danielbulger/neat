@@ -128,7 +128,7 @@ public class Evolution {
 		return speciesClassifier;
 	}
 
-	public Collection<Genome> getGenomes() {
+	public List<Genome> getGenomes() {
 		return population.getGenomes();
 	}
 }
