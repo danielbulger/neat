@@ -201,6 +201,14 @@ public class Genome implements Comparable<Genome> {
 		return Float.compare(fitness, o.fitness);
 	}
 
+	public int getNumInputs() {
+		return nodeTypes.get(NodeType.INPUT).size();
+	}
+
+	public int getNumOutputs() {
+		return nodeTypes.get(NodeType.OUTPUT).size();
+	}
+
 	@Override
 	public String toString() {
 		return "Genome{" +
