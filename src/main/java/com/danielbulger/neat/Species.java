@@ -12,9 +12,7 @@ public class Species implements Comparable<Species> {
 	private Genome best;
 
 	private float highestFitness = Float.MIN_VALUE;
-
 	private final List<Genome> genomes = new ArrayList<>();
-
 	private int staleness = 0;
 
 	public void add(@NotNull Genome genome) {
@@ -32,13 +30,9 @@ public class Species implements Comparable<Species> {
 		final Genome currentBest = getCurrentBest();
 
 		if (best == null || currentBest.compareTo(this.best) > 0) {
-
 			staleness = 0;
-
 			best = currentBest;
-
 			highestFitness = currentBest.getFitness();
-
 		} else {
 			++staleness;
 		}
@@ -62,7 +56,6 @@ public class Species implements Comparable<Species> {
 
 	@Contract(pure = true)
 	public float getAverageFitness() {
-
 		return getTotalFitness() / genomes.size();
 	}
 

@@ -11,9 +11,7 @@ public class CloneMate implements Mate {
 	@Override
 	@Contract(pure = true)
 	public @NotNull Genome mate(@NotNull Genome mother, @NotNull Genome father) {
-
 		final Genome parent = ThreadLocalRandom.current().nextBoolean() ? mother : father;
-
 		return new Genome(parent);
 	}
 }

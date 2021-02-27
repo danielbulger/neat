@@ -24,13 +24,9 @@ public class WeightedFitnessSelect implements Select {
 		float sum = 0;
 
 		for (final Genome genome : species.getGenomes()) {
-
 			sum += genome.getFitness();
-
 			if (sum >= fitness) {
-
 				return genome;
-
 			}
 		}
 

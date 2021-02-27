@@ -15,9 +15,7 @@ public class AddConnectionMutation implements Mutation {
 	public void mutate(@NotNull Genome genome) {
 
 		final NavigableMap<Integer, Node> nodes = genome.getNodes();
-
 		final Optional<Node> optionalFirstNode = Random.fromMap(nodes);
-
 		final Optional<Node> optionalSecondNode = Random.fromMap(nodes);
 
 		if (optionalFirstNode.isEmpty() || optionalSecondNode.isEmpty()) {
@@ -25,7 +23,6 @@ public class AddConnectionMutation implements Mutation {
 		}
 
 		Node fromNode = optionalFirstNode.get();
-
 		Node toNode = optionalSecondNode.get();
 
 		if (fromNode.equals(toNode)) {

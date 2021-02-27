@@ -9,23 +9,14 @@ import java.util.Properties;
 public class Config {
 
 	private int numInputs;
-
 	private int numOutputs;
-
 	private int populationSize;
-
 	private int staleThreshold;
-
 	private float mutateWeightChance;
-
 	private float mutateAddConnectionChance;
-
 	private float mutateAddNodeChance;
-
 	private float cloneMateChance;
-
 	private float crossoverMateChance;
-
 	private float crossoverDisableConnectionChance;
 
 	public Config(final @NotNull Properties properties) {
@@ -33,25 +24,15 @@ public class Config {
 	}
 
 	private void initialise(final Properties properties) {
-
 		numInputs = getInt(properties, "genome.input-nodes");
-
 		numOutputs = getInt(properties, "genome.output-nodes");
-
 		populationSize = getInt(properties, "population.initial-size");
-
 		staleThreshold = getInt(properties, "species.stale-threshold");
-
 		mutateWeightChance = getFloat(properties, "mutation.change-weights-chance");
-
 		mutateAddConnectionChance = getFloat(properties, "mutation.add-connection-chance");
-
 		mutateAddNodeChance = getFloat(properties, "mutation.add-node-chance");
-
 		cloneMateChance = getFloat(properties, "mate.clone-chance");
-
 		crossoverMateChance = getFloat(properties, "mate.crossover-chance");
-
 		crossoverDisableConnectionChance = getFloat(properties, "mate.crossover.disable-connection-chance");
 	}
 

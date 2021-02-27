@@ -18,13 +18,9 @@ public class Random {
 		}
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
-
 		final int element = random.nextInt(map.lastKey());
-
 		final Integer key = map.ceilingKey(element);
-
 		return Optional.of(map.get(key));
-
 	}
 
 	@NotNull
@@ -36,9 +32,7 @@ public class Random {
 		}
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
-
 		final int element = random.nextInt(list.size());
-
 		return Optional.of(list.get(element));
 	}
 

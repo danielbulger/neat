@@ -23,13 +23,9 @@ public class CrossoverMate implements Mate {
 	private Genome crossover(@NotNull Genome best, @NotNull Genome other) {
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
-
 		final Genome genome = new Genome();
-
 		final Map<Innovation, Connection> bestConnections = best.getConnections();
-
 		final Map<Innovation, Connection> otherConnections = other.getConnections();
-
 		final Set<Innovation> innovations = new TreeSet<>(bestConnections.keySet());
 		innovations.addAll(otherConnections.keySet());
 
@@ -52,9 +48,7 @@ public class CrossoverMate implements Mate {
 
 			} else if (best.compareTo(other) == 0) {
 				// If they are both equally fit then we include both excess/disjoint genes
-				connection = bestConnections.containsKey(innovation) ?
-
-					bestConnections.get(innovation) : otherConnections.get(innovation);
+				connection = bestConnections.containsKey(innovation) ? bestConnections.get(innovation) : otherConnections.get(innovation);
 
 			} else {
 
@@ -62,11 +56,9 @@ public class CrossoverMate implements Mate {
 				if (bestConnections.containsKey(innovation)) {
 					connection = bestConnections.get(innovation);
 				}
-
 			}
 
 			if (connection != null) {
-
 				genome.addConnection(connection);
 			}
 		}
@@ -77,12 +69,9 @@ public class CrossoverMate implements Mate {
 	@Override
 	@Contract(pure = true)
 	public @NotNull Genome mate(@NotNull Genome mother, @NotNull Genome father) {
-
 		if (mother.compareTo(father) > 0) {
-
 			return crossover(mother, father);
 		} else {
-
 			return crossover(father, mother);
 		}
 	}

@@ -16,17 +16,11 @@ public class Node implements Comparable<Node> {
 	public static Node create(NodeType type) {
 		return new Node(counter.incrementAndGet(), type);
 	}
-
 	private final List<Connection> incomingConnections = new ArrayList<>();
-
 	private final List<Connection> outgoingConnections = new ArrayList<>();
-
 	private final int id;
-
 	private final NodeType type;
-
 	private float value = 0;
-
 	private boolean processed = false;
 
 	public Node(int id, @NotNull NodeType type) {
@@ -57,11 +51,9 @@ public class Node implements Comparable<Node> {
 		}
 
 		for (final Connection connection : outgoingConnections) {
-
 			if (!connection.isEnabled()) {
 				continue;
 			}
-
 			connection.getTo().value += (connection.getWeight() * this.value);
 		}
 

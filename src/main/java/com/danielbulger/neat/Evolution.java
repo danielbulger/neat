@@ -19,13 +19,9 @@ import java.util.stream.Collectors;
 public class Evolution {
 
 	private final SpeciesClassifier speciesClassifier;
-
 	private final Select genomeSelect;
-
 	private final Map<Mate, Float> mateStrategy;
-
 	private final Map<Mutation, Float> mutationStrategy = new HashMap<>();
-
 	private final Population population;
 
 	public Evolution(
@@ -34,43 +30,30 @@ public class Evolution {
 		final @NotNull Select genomeSelect
 	) {
 		final Config config = new Config(properties);
-
 		this.genomeSelect = Objects.requireNonNull(genomeSelect);
-
 		this.speciesClassifier = Objects.requireNonNull(speciesClassifier);
-
 		this.initialiseMutations(config);
-
 		this.mateStrategy = this.initialiseMates(config);
-
 		this.population = new Population(config, this);
-
 		this.population.populate(config.getPopulationSize());
 	}
 
 	public Genome evolve() {
 		population.makeNextGeneration();
-
 		return population.getBest();
 	}
 
 	private void initialiseMutations(final Config config) {
 		mutationStrategy.put(new AddConnectionMutation(), config.getMutateAddConnectionChance());
-
 		mutationStrategy.put(new AddNodeMutation(), config.getMutateAddNodeChance());
-
 		mutationStrategy.put(new ConnectionWeightMutation(), config.getMutateWeightChance());
 	}
 
 	private Map<Mate, Float> initialiseMates(final Config config) {
-
 		final Map<Mate, Float> unsorted = new HashMap<>();
-
 		unsorted.put(new CloneMate(), config.getCloneMateChance());
-
 		unsorted.put(
 			new CrossoverMate(config.getCrossoverDisableConnectionChance()),
-
 			config.getCrossoverMateChance()
 		);
 
@@ -89,15 +72,10 @@ public class Evolution {
 
 	@Contract(mutates = "param1")
 	protected void mutate(final Genome genome) {
-
 		for (final Map.Entry<Mutation, Float> entry : mutationStrategy.entrySet()) {
-
 			final float chance = ThreadLocalRandom.current().nextFloat();
-
 			if (chance < entry.getValue()) {
-
 				entry.getKey().mutate(genome);
-
 			}
 		}
 	}
@@ -108,13 +86,10 @@ public class Evolution {
 		float sum = 0;
 
 		for (final Map.Entry<Mate, Float> entry : mateStrategy.entrySet()) {
-
 			sum += entry.getValue();
-
 			if (sum >= chance) {
 				return entry.getKey();
 			}
-
 		}
 
 		throw new IllegalStateException("Unable to choose mate strategy");

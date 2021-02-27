@@ -20,7 +20,6 @@ public class ConnectionWeightMutation implements Mutation {
 		}
 
 		final Connection connection = optionalConnection.get();
-
 		connection.setWeight(ThreadLocalRandom.current().nextFloat());
 	}
 }

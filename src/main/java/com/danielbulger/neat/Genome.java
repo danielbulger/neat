@@ -9,11 +9,8 @@ import java.util.stream.Collectors;
 public class Genome implements Comparable<Genome> {
 
 	private final NavigableMap<Integer, Node> nodes = new TreeMap<>();
-
 	private final EnumMap<NodeType, List<Node>> nodeTypes = new EnumMap<>(NodeType.class);
-
 	private final NavigableMap<Innovation, Connection> connections = new TreeMap<>();
-
 	private float fitness;
 
 	public Genome() {
@@ -28,13 +25,9 @@ public class Genome implements Comparable<Genome> {
 		// Make sure we copy the node/connections so updating the value doesn't affect the
 		// referenced parent node.
 		for (final Map.Entry<Innovation, Connection> entry : parent.connections.entrySet()) {
-
 			final Connection connection = entry.getValue();
-
 			final Node from = nodes.get(connection.getFrom().getId());
-
 			final Node to = nodes.get(connection.getTo().getId());
-
 			addConnection(new Connection(from, to, connection.getWeight(), entry.getKey(), connection.isEnabled()));
 		}
 
@@ -99,13 +92,10 @@ public class Genome implements Comparable<Genome> {
 		}
 
 		final Collection<Node> inputNodes = nodeTypes.get(NodeType.INPUT);
-
 		final Collection<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
 
 		for (final Node input : inputNodes) {
-
 			for (final Node output : outputNodes) {
-
 				this.addConnection(Connection.create(
 					input, output
 				));
@@ -117,7 +107,6 @@ public class Genome implements Comparable<Genome> {
 	public boolean isConnected(Node from, Node to) {
 
 		for (final Connection connection : connections.values()) {
-
 			if (connection.getTo().equals(to) && connection.getFrom().equals(from)) {
 				return true;
 			}
@@ -160,9 +149,7 @@ public class Genome implements Comparable<Genome> {
 	}
 
 	public void addConnections(final @NotNull Connection... elements) {
-
 		for (final Connection connection : elements) {
-
 			this.addConnection(connection);
 		}
 	}

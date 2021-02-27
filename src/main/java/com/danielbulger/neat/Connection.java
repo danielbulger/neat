@@ -8,22 +8,33 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Connection {
 
+	/**
+	 * Create a new {@link Connection} between {@code from} and {@code to} with a
+	 * random {@link #weight}.
+	 *
+	 * @param from The source {@link Node} of the {@link Connection}.
+	 * @param to The end {@link Node} of the {@link Connection}.
+	 * @return The newly created {@link Node}.
+	 */
 	public static Connection create(Node from, Node to) {
 		return create(from, to, ThreadLocalRandom.current().nextFloat());
 	}
-
+	/**
+	 * Create a new {@link Connection} between {@code from} and {@code to} with the given {@code weight}.
+	 *
+	 * @param from The source {@link Node} of the {@link Connection}.
+	 * @param to The end {@link Node} of the {@link Connection}.
+	 * @param weight The connection weight.
+	 * @return The newly created {@link Node}.
+	 */
 	public static Connection create(Node from, Node to, float weight) {
 		return new Connection(from, to, weight, Innovation.next(), true);
 	}
 
 	private final Node from;
-
 	private final Node to;
-
 	private float weight;
-
 	private final Innovation innovation;
-
 	private boolean enabled;
 
 	public Connection(Node from, Node to, float weight, Innovation innovation, boolean enabled) {

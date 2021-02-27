@@ -14,11 +14,8 @@ public class Population {
 	private static final Logger LOG = LoggerFactory.getLogger(Population.class);
 
 	private final Config config;
-
 	private final Evolution evolution;
-
 	private final List<Species> species = new ArrayList<>();
-
 	private final List<Genome> genomes = new ArrayList<>();
 
 	public Population(
@@ -26,7 +23,6 @@ public class Population {
 		final @NotNull Evolution evolution
 	) {
 		this.config = Objects.requireNonNull(config);
-
 		this.evolution = Objects.requireNonNull(evolution);
 	}
 
@@ -35,7 +31,6 @@ public class Population {
 		final int initSize = genomes.size();
 
 		for (int i = initSize; i < size; ++i) {
-
 			genomes.add(new Genome(config.getNumInputs(), config.getNumOutputs()));
 		}
 	}
@@ -51,7 +46,6 @@ public class Population {
 		final double sum = getTotalFitness();
 
 		final List<Genome> children = new ArrayList<>();
-
 		for (final Species sp : species) {
 
 			// Retain the best of the Species without change.
@@ -68,7 +62,6 @@ public class Population {
 		// populate the remaining space from a random
 		// selection
 		while (children.size() < genomes.size()) {
-
 			final Optional<Species> speciesOptional = Random.fromList(species);
 
 			if (speciesOptional.isEmpty()) {
@@ -80,7 +73,6 @@ public class Population {
 
 		// Replace all the parents with the newest generation.
 		genomes.clear();
-
 		genomes.addAll(children);
 	}
 
@@ -88,11 +80,8 @@ public class Population {
 	private Genome makeChild(final Species species) {
 
 		final Genome mother = evolution.getGenomeSelect().select(species);
-
 		final Genome father = evolution.getGenomeSelect().select(species);
-
 		final Genome child = evolution.getMateStrategy().mate(mother, father);
-
 		evolution.mutate(child);
 
 		return child;
@@ -124,7 +113,6 @@ public class Population {
 		Genome best = null;
 
 		for (final Species s : species) {
-
 			for (final Genome genome : s.getGenomes()) {
 				if (best == null || genome.compareTo(best) > 0) {
 					best = genome;

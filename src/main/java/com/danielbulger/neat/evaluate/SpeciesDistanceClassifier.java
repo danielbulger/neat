@@ -14,11 +14,8 @@ import java.util.Optional;
 public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 	private final float disjointWeighting;
-
 	private final float excessWeighting;
-
 	private final float weightWeighting;
-
 	private final float threshold;
 
 	public SpeciesDistanceClassifier() {
@@ -49,13 +46,9 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 		}
 
 		final Genome rep = optionalGenome.get();
-
 		final float excess = (excessWeighting * getExcess(rep, genome)) / factor;
-
 		final float disjoint = (disjointWeighting * getDisjoint(rep, genome)) / factor;
-
 		final float weight = weightWeighting * getAverageWeightDifference(rep, genome);
-
 		final float distance = excess + disjoint + weight;
 
 		return distance < threshold;
@@ -67,7 +60,6 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 		Innovation last = representative.getConnections().lastKey();
 
 		int size = 0;
-
 		final NavigableMap<Innovation, Connection> innovations = genome.getConnections();
 
 		// Keep moving up the set until we run out of innovations
@@ -83,24 +75,19 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 	private int getDisjoint(@NotNull Genome representative, @NotNull Genome genome) {
 
 		final NavigableMap<Innovation, Connection> repSet = representative.getConnections();
-
 		final NavigableMap<Innovation, Connection> genomeSet = genome.getConnections();
 
 		int size = 0;
 
 		for (final Innovation innovation : repSet.keySet()) {
-
 			if (!genomeSet.containsKey(innovation)) {
 				++size;
 			}
 		}
 
 		final Innovation last = repSet.lastKey();
-
 		for (final Innovation innovation : genomeSet.keySet()) {
-
 			if (!repSet.containsKey(innovation)) {
-
 				// If the innovation is higher than the largest in the other set
 				// the it is classified as an excess not an disjoint.
 				if (innovation.compareTo(last) <= 0) {
@@ -116,22 +103,15 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 	private float getAverageWeightDifference(@NotNull Genome representative, @NotNull Genome genome) {
 
 		int count = 0;
-
 		float sum = 0;
 
 		for (final Connection c1 : representative.getConnections().values()) {
-
 			for (final Connection c2 : genome.getConnections().values()) {
-
 				if (c1.equals(c2)) {
-
 					sum += Math.abs(c1.getWeight() - c2.getWeight());
-
 					count += 1;
 				}
-
 			}
-
 		}
 
 		if (count == 0) {
