@@ -90,17 +90,6 @@ public class Genome implements Comparable<Genome> {
 		for (int i = 0; i < numOutputs; ++i) {
 			addNode(Node.create(NodeType.OUTPUT));
 		}
-
-		final Collection<Node> inputNodes = nodeTypes.get(NodeType.INPUT);
-		final Collection<Node> outputNodes = nodeTypes.get(NodeType.OUTPUT);
-
-		for (final Node input : inputNodes) {
-			for (final Node output : outputNodes) {
-				this.addConnection(Connection.create(
-					input, output
-				));
-			}
-		}
 	}
 
 	@Contract(pure = true)
@@ -173,6 +162,10 @@ public class Genome implements Comparable<Genome> {
 	@Contract(pure = true)
 	public NavigableMap<Integer, Node> getNodes() {
 		return nodes;
+	}
+
+	public Collection<Node> getNodeByType(NodeType type) {
+		return nodeTypes.get(type);
 	}
 
 	public float getFitness() {

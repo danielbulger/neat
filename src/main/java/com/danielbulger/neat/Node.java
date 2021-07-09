@@ -4,9 +4,9 @@ import com.danielbulger.neat.util.MathUtil;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.awt.*;
 import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Node implements Comparable<Node> {
@@ -16,12 +16,14 @@ public class Node implements Comparable<Node> {
 	public static Node create(NodeType type) {
 		return new Node(counter.incrementAndGet(), type);
 	}
+
 	private final List<Connection> incomingConnections = new ArrayList<>();
 	private final List<Connection> outgoingConnections = new ArrayList<>();
 	private final int id;
 	private final NodeType type;
 	private float value = 0;
 	private boolean processed = false;
+	private Point point;
 
 	public Node(int id, @NotNull NodeType type) {
 		this.id = id;
@@ -73,7 +75,7 @@ public class Node implements Comparable<Node> {
 
 	public void addIncomingConnection(final Connection connection) {
 
-		if(!connection.getTo().equals(this)) {
+		if (!connection.getTo().equals(this)) {
 			throw new IllegalArgumentException();
 		}
 
@@ -81,7 +83,7 @@ public class Node implements Comparable<Node> {
 	}
 
 	public void addOutgoingConnection(final Connection connection) {
-		if(!connection.getFrom().equals(this)) {
+		if (!connection.getFrom().equals(this)) {
 			throw new IllegalArgumentException();
 		}
 
@@ -105,6 +107,24 @@ public class Node implements Comparable<Node> {
 	@Contract(pure = true)
 	public NodeType getType() {
 		return type;
+	}
+
+	@Contract(pure = true)
+	public Collection<Connection> getIncomingConnections() {
+		return Collections.unmodifiableCollection(incomingConnections);
+	}
+
+	@Contract(pure = true)
+	public Collection<Connection> getOutgoingConnections() {
+		return Collections.unmodifiableCollection(outgoingConnections);
+	}
+
+	public Point getPoint() {
+		return point;
+	}
+
+	public void setPoint(Point point) {
+		this.point = point;
 	}
 
 	@Override

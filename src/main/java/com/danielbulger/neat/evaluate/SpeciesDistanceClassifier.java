@@ -56,11 +56,13 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 	@Contract(pure = true)
 	private int getExcess(@NotNull Genome representative, @NotNull Genome genome) {
-
-		Innovation last = representative.getConnections().lastKey();
+		final NavigableMap<Innovation, Connection> innovations = genome.getConnections();
+		if (representative.getConnections().isEmpty() || innovations.isEmpty()) {
+			return 0;
+		}
 
 		int size = 0;
-		final NavigableMap<Innovation, Connection> innovations = genome.getConnections();
+		Innovation last = representative.getConnections().lastKey();
 
 		// Keep moving up the set until we run out of innovations
 		// that are higher than the representative innovations.
@@ -76,6 +78,10 @@ public class SpeciesDistanceClassifier implements SpeciesClassifier {
 
 		final NavigableMap<Innovation, Connection> repSet = representative.getConnections();
 		final NavigableMap<Innovation, Connection> genomeSet = genome.getConnections();
+
+		if (repSet.isEmpty()) {
+			return 0;
+		}
 
 		int size = 0;
 
