@@ -23,7 +23,8 @@ public class CrossoverMate implements Mate {
 	private Genome crossover(@NotNull Genome best, @NotNull Genome other) {
 
 		final ThreadLocalRandom random = ThreadLocalRandom.current();
-		final Genome genome = new Genome();
+
+		final Genome genome = new Genome(best.getNumInputs(), best.getNumOutputs());
 		final Map<Innovation, Connection> bestConnections = best.getConnections();
 		final Map<Innovation, Connection> otherConnections = other.getConnections();
 		final Set<Innovation> innovations = new TreeSet<>(bestConnections.keySet());
