@@ -96,7 +96,8 @@ public class Genome implements Comparable<Genome> {
 	public boolean isConnected(Node from, Node to) {
 
 		for (final Connection connection : connections.values()) {
-			if (connection.getTo().equals(to) && connection.getFrom().equals(from)) {
+			if ((connection.getTo().equals(to) && connection.getFrom().equals(from)) ||
+				(connection.getTo().equals(from) && connection.getFrom().equals(to))) {
 				return true;
 			}
 		}
