@@ -124,6 +124,10 @@ public class Genome implements Comparable<Genome> {
 
 	public void addConnection(final @NotNull Connection connection) {
 
+		if (isConnected(connection.getFrom(), connection.getTo())) {
+			return;
+		}
+
 		connections.put(connection.getInnovation(), connection);
 
 		if (!nodes.containsKey(connection.getFrom().getId())) {

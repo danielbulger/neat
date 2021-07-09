@@ -41,10 +41,6 @@ public class AddConnectionMutation implements Mutation {
 			toNode = temp;
 		}
 
-		if (genome.isConnected(fromNode, toNode)) {
-			return;
-		}
-
 		genome.addConnection(Connection.create(fromNode, toNode));
 	}
 }

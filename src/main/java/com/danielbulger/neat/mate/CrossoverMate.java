@@ -59,7 +59,7 @@ public class CrossoverMate implements Mate {
 				}
 			}
 
-			if (connection != null && !genome.isConnected(connection.getFrom(), connection.getTo())) {
+			if (connection != null) {
 				genome.addConnection(connection);
 			}
 		}
